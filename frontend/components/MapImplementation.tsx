@@ -13,30 +13,30 @@ import { Point } from 'ol/geom';
 import { Icon, Style } from 'ol/style';
 import { useGeographic } from 'ol/proj';
 
-const MapImplementation = () => {
+const MapImplementation = ({center, setCenter}: {center: [number, number] | null, setCenter: React.Dispatch<React.SetStateAction<[number, number] | null>>}) => {
     const [map1Object, setMap1Object] = useState<Map | null>(null);
-    const [center, setCenter] = useState<[number, number] | null>(null); 
+    // const [center, setCenter] = useState<[number, number] | null>(null); 
     const map1Container = useRef<HTMLDivElement | null>(null); 
 
 
     useGeographic()
 
-    useEffect(() => {
-        if (typeof window !== 'undefined' && navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const { latitude, longitude } = position.coords;
-                    setCenter([longitude, latitude]); // Set map center with longitude, latitude
-                    console.log(position.coords)
-                },
-                (error) => {
-                    console.error('Error obtaining location:', error);
-                    // Fallback to a default location if permission is denied or error occurs
-                    setCenter([0, 0]); // Example: Default to 0, 0 (the Equator)
-                }
-            );
-        }
-    }, []);
+    // useEffect(() => {
+    //     if (typeof window !== 'undefined' && navigator.geolocation) {
+    //         navigator.geolocation.getCurrentPosition(
+    //             (position) => {
+    //                 const { latitude, longitude } = position.coords;
+    //                 setCenter([longitude, latitude]); // Set map center with longitude, latitude
+    //                 console.log(position.coords)
+    //             },
+    //             (error) => {
+    //                 console.error('Error obtaining location:', error);
+    //                 // Fallback to a default location if permission is denied or error occurs
+    //                 setCenter([0, 0]); // Example: Default to 0, 0 (the Equator)
+    //             }
+    //         );
+    //     }
+    // }, []);
 
     useEffect(() => {
         if(center){

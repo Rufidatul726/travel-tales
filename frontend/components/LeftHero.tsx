@@ -1,8 +1,15 @@
 import React from 'react'
 import Image from 'next/image'
 import Button from './Button'
+import { useRouter } from 'next/navigation'
 
 const LeftHero = () => {
+  const router = useRouter()
+
+  const handleLogin = () => {
+    router.push('/auth');
+  }
+
   return (
     <div>
       {/* <div className='hero-map'/> */}
@@ -23,6 +30,7 @@ const LeftHero = () => {
             type='button'
             title='Planning for a new trip? Let&apos;s Go!'
             variant='btn_green'
+            onClick={handleLogin}
           />
         </div>
 

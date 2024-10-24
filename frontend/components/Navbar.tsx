@@ -18,7 +18,7 @@ const Navbar = () => {
   };
 
   const handleLogin = () => {
-    router.push('/login');
+    router.push('/auth');
   }
 
   return (
