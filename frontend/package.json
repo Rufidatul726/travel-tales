@@ -13,7 +13,8 @@
     "ol": "^10.2.1",
     "ol-ext": "^4.0.24",
     "react": "19.0.0-rc-69d4b800-20241021",
-    "react-dom": "19.0.0-rc-69d4b800-20241021"
+    "react-dom": "19.0.0-rc-69d4b800-20241021",
+    "serpapi": "^2.1.0"
   },
   "devDependencies": {
     "@types/node": "^20",

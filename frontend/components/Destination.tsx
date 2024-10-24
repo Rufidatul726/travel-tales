@@ -1,10 +1,28 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import Input from './Input'
-import Button from './Button'
 
 const Destination = () => {
+  const [input, setInput] = useState('');
+  const [results, setResults] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleAutocomplete = async () => {
+    try {
+      const response = await fetch(`/api/autocomplete?input=${input}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch autocomplete data');
+      }
+      const data = await response.json();
+      console.log(response);
+      
+      setResults(data);
+    } catch (err) {
+      setError('Error fetching data');
+    }
+  };
+  
   return (
     <div className="w-full max-w-4xl mx-auto">
       <div className="flex flex-col md:flex-row items-center bg-white lg:rounded-full shadow-xl p-2">
@@ -15,6 +33,7 @@ const Destination = () => {
             id="where"
             placeholder="Search destinations"
             className="w-full border-0 p-0 focus:ring-0 text-gray-900 placeholder-gray-500 sm:text-sm"
+            onChange={(e) => setInput(e.target.value)}
           />
         </div>
         <div className="w-px bg-gray-200 hidden md:block h-10" />
@@ -47,7 +66,7 @@ const Destination = () => {
             className="w-full border-0 p-0 focus:ring-0 text-gray-900 placeholder-gray-500 sm:text-sm"
           />
         </div>
-        <div className=" cursor-pointer mt-3 sm:mt-0 w-full sm:w-auto px-6 py-3 bg-gray-500 hover:bg-black text-white font-semibold rounded-full flex items-center justify-center">
+        <div className=" cursor-pointer mt-3 sm:mt-0 w-full sm:w-auto px-6 py-3 bg-gray-500 hover:bg-black text-white font-semibold rounded-full flex items-center justify-center" onClick={handleAutocomplete}>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
                 <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
             </svg>
