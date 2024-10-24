@@ -24,25 +24,28 @@ model users {
 }
 
 model trips {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  user_id     String   @db.ObjectId
-  place_name  String
-  location    Json
-  budget      Float
-  days        Int
-  start_date  DateTime
-  endDate     DateTime
-  description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  user_id          String   @db.ObjectId
+  current_location Json?
+  place_name       String
+  location         Json
+  budget           Float
+  days             Int
+  start_date       DateTime
+  endDate          DateTime
+  description      String?
+  is_trip_ended    Boolean?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 }
 
 model images {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   album_id    String   @db.ObjectId
   trip_id     String   @db.ObjectId
-  url         String
+  file_name   String
   description String?
+  tags        String[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }

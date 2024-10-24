@@ -1,26 +1,68 @@
-import { Injectable } from '@nestjs/common';
-import { CreateImageAlbumDto } from './dto/create-image-album.dto';
-import { UpdateImageAlbumDto } from './dto/update-image-album.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { CreateAlbumDto } from './dto/create-album.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class ImageAlbumService {
-  create(createImageAlbumDto: CreateImageAlbumDto) {
-    return 'This action adds a new imageAlbum';
+  constructor(private prisma: PrismaService) {
+
   }
 
-  findAll() {
-    return `This action returns all imageAlbum`;
+  async createAlbum(createAlbumDto: CreateAlbumDto, tripId: string) {
+    const newAlbum = await this.prisma.albums.create({
+      data: {
+        title: createAlbumDto.title,
+        description: createAlbumDto.description || "",
+        trip_id: tripId,
+        createdAt: new Date(),
+      },
+    });
+    return newAlbum;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} imageAlbum`;
+  async findAllAlbumByTrip(tripId: string) {
+    const albums = await this.prisma.albums.findMany({
+      where: {
+        trip_id: tripId,
+      },
+    });
+    return albums;
   }
 
-  update(id: number, updateImageAlbumDto: UpdateImageAlbumDto) {
-    return `This action updates a #${id} imageAlbum`;
+  async findOneAlbum(id: string) {
+    const album = await this.prisma.albums.findUnique({
+      where: {
+        id: id,
+      },
+    });
+    if (!album) {
+      throw new NotFoundException(`Album with ID ${id} not found`);
+    }
+    return album;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} imageAlbum`;
+  async removeAlbum(id: string) {
+    const deletedAlbum = await this.prisma.albums.delete({
+      where: {
+        id: id,
+      },
+    });
+    return deletedAlbum;
+  }
+
+  async saveImg(file: Express.Multer.File, tripId: string, albumId: string) {
+    //image description api, tag
+    const description = "Need to work on that"
+    // Save file information in the database
+    console.log(file);
+
+    return await this.prisma.images.create({
+      data: {
+        file_name: file.filename,
+        trip_id: tripId,
+        album_id: albumId,
+        description: 'Image description here',
+      },
+    });
   }
 }
