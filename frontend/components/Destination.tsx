@@ -32,9 +32,9 @@ const Destination = (
     }
   };
 
-  // const handleSearch(() => {
-
-  // })
+  const handleSearch  = () => {
+      console.log(input, startDate, endDate)
+  }
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
