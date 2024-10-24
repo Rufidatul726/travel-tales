@@ -9,7 +9,7 @@ import { WeatherService } from './weather.service';
 
 @ApiTags('Trip')
 @ApiBearerAuth()
-// @UseGuards(AccessTokenGuard)
+@UseGuards(AccessTokenGuard)
 @Controller('trip')
 export class TripController {
   constructor(private readonly tripService: TripService,

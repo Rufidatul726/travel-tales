@@ -54,7 +54,7 @@ export class ImageAlbumService {
     //image description api, tag
     const description = "Need to work on that"
     // Save file information in the database
-    console.log(file);
+    // console.log(file);
 
     return await this.prisma.images.create({
       data: {

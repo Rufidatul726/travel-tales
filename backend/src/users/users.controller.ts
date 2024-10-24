@@ -16,6 +16,12 @@ export class UsersController {
     return this.authService.create(createUserDto);
   }
 
+  @ApiBearerAuth()
+  @UseGuards(AccessTokenGuard)
+  @Get('me')
+  findOne(@Req() req) {
+    return this.usersService.findOneById(req.user['sub']);
+  }
 
   @Post('login')
   async login(@Body() { email, password }: LoginUserDto) {
