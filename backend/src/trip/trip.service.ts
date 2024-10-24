@@ -24,6 +24,7 @@ export class TripService {
         days: createTripDto.days,
         start_date: createTripDto.startDate,
         endDate: createTripDto.endDate,
+        is_trip_ended: false
       },
     })
 
