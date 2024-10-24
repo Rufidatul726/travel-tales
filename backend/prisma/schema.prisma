@@ -50,7 +50,7 @@ model images {
 model albums {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   title       String
-  travel_id   String   @db.ObjectId
+  trip_id     String   @db.ObjectId
   description String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

@@ -4,14 +4,17 @@ import { CreateTripDto } from './dto/create-trip.dto';
 import { UpdateTripDto } from './dto/update-trip.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AccessTokenGuard } from 'src/users/guard/accessToken.guard';
+import { WeatherService } from './weather.service';
 
 
 @ApiTags('Trip')
 @ApiBearerAuth()
-@UseGuards(AccessTokenGuard)
+// @UseGuards(AccessTokenGuard)
 @Controller('trip')
 export class TripController {
-  constructor(private readonly tripService: TripService) { }
+  constructor(private readonly tripService: TripService,
+    private weatherService: WeatherService
+  ) { }
 
   @Post()
   create(@Req() req, @Body() createTripDto: CreateTripDto) {
@@ -21,6 +24,11 @@ export class TripController {
   @Get('my-trips')
   findAll(@Req() req) {
     return this.tripService.findAll(req.user['sub']);
+  }
+
+  @Get(':id/weather-status')
+  getWeatherStatus(@Param('id') id: string) {
+    return this.weatherService.getWeatherInfo(id)
   }
 
   @Get(':id')
