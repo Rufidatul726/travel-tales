@@ -1,9 +1,13 @@
+import os
+from typing import Dict, List, Tuple
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from openai_service import generate_travel_itinerary, analyze_image, generate_blog  # Import the functions
 from datetime import date
+from image import find_similar_images, image_data  
+from recommendation import get_nearby_places
 
-# Create FastAPI instance
+
 app = FastAPI()
 
 # Input data model for text input
@@ -29,6 +33,26 @@ async def analyze_image_endpoint(image_input: ImageInput):
         return {"analysis": result}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
+
+
+class SearchQuery(BaseModel):
+    query: str
+
+class ImageResponse(BaseModel):
+    url: str
+    score: float
+
+# Endpoint to search for similar images
+@app.post("/search-similar-images/", response_model=List[ImageResponse])
+async def search_similar_images(search_query: SearchQuery) -> List[ImageResponse]:
+    try:
+        similar_images = find_similar_images(search_query.query)
+        # Create a list of ImageResponse instances
+        formatted_images = [ImageResponse(url=img_url, score=score) for img_url, score in similar_images]
+        return formatted_images
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
+
 
 
 @app.post("/generate-blog/")
@@ -67,3 +91,18 @@ async def generate_plan_endpoint(travel_request: TravelRequest):
         return {"gpt_response": result}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error generating travel plan: {str(e)}")
+
+class HotelSearch(BaseModel):
+    lat: float
+    long: float
+    type: str
+    
+# Create an endpoint to search for nearby hotels
+@app.post("/nearby-hotels/")
+async def nearby_places(search: HotelSearch):
+    try:
+        api_key = os.getenv("GOOGLE_API_KEY")
+        all = get_nearby_places(search.lat, search.long, search.type, api_key)
+        return {"ALL": all}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error: {str(e)}")

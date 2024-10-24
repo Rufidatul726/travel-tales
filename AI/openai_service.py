@@ -106,8 +106,8 @@ user_preferences = {
 current_latitude = 23.7271143
 current_longitude = 90.3860279
 
-itinerary = generate_travel_itinerary(destination, user_preferences, current_latitude, current_longitude)
-print(itinerary)
+# itinerary = generate_travel_itinerary(destination, user_preferences, current_latitude, current_longitude)
+# print(itinerary)
 
 
 def generate_blog(user_input: str, latitude: float, longitude: float, start_date: str, end_date: str):
