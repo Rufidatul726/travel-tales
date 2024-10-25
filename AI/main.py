@@ -73,21 +73,24 @@ async def generate_blog_endpoint(user_input: UserBlog):
 
 
 class UserPreferences(BaseModel):
+    destination: str
     budget: str
     duration: str
+    curLat: str
+    curLong: str
+    descLat: str
+    descLong: str
     travel_type: str
     transport_type: str
     meal_preference: str
 
 class TravelRequest(BaseModel):
-    destination: str
     user_preferences: UserPreferences
 
 @app.post("/generate-plan/")
 async def generate_plan_endpoint(travel_request: TravelRequest):
     try:
         result = generate_travel_itinerary(  # Await if the function is async
-            travel_request.destination, 
             travel_request.user_preferences.dict()
         )
         return {"gpt_response": result}

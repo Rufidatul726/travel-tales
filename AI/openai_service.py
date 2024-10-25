@@ -38,18 +38,23 @@ def analyze_image(image_url: str):
         raise Exception(f"Error analyzing image: {str(e)}")
 
 
-def generate_travel_itinerary(destLat: str, desLong:str, user_preferences: dict, lat: float, long: float):
+def generate_travel_itinerary(user_preferences: dict):
     try:
         # Extract user preferences from the input dictionary
         budget = user_preferences.get("budget", "2")
         duration = user_preferences.get("duration", "7 days")
-        transport_type = user_preferences.get("transport_type", "flight")
+        transport_type = user_preferences.get("transport_type", "bus")
         meal_preference = user_preferences.get("meal_preference", "local cuisine")
+        current_latitude = user_preferences.get("current_latitude", "")
+        current_longitude = user_preferences.get("current_longitude", "")
+        destination = user_preferences.get("desctination", "")
+        destination_latitude = user_preferences.get("destination_latitude", "")
+        destination_longitude = user_preferences.get("destination_longitude", "")
 
         api_key = os.getenv("GOOGLE_API_KEY")
 
 
-        nearby_hotels = get_nearby_places(destLat, desLong, api_key)
+        nearby_hotels = get_nearby_places(destination_latitude, destination_longitude, api_key)
 
         # Create a summary of nearby hotels for the prompt
         hotels_summary = ""
@@ -64,14 +69,14 @@ def generate_travel_itinerary(destLat: str, desLong:str, user_preferences: dict,
         completion = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": "You are a travel assistant that creates personalized travel itineraries based on user preferences. Show the result in json format. Budget={1,2,3}={budget, mid-range, luxury}"},
-                {"role": "user", "content": f"I want to travel to {destination}. My preferences are: \n"
+                {"role": "system", "content": "You are a travel assistant that creates personalized travel itineraries based on user preferences. Budget={1,2,3}={budget, mid-range, luxury}"},
+                {"role": "user", "content": f"I want to travel to {destination} with cordinate {destination_latitude}, {destination_longitude}. My preferences are: \n"
                                             f"Budget: {budget}\n"
                                             f"Duration: {duration}\n"
                                             f"Preferred Transport: {transport_type}\n"
                                             f"Meal Preference: {meal_preference}\n"
                                             f"{hotels_summary}\n"
-                                            f"Start point coordinates: {lat}, {long}\n"
+                                            f"Start point coordinates: {current_latitude}, {current_longitude}\n"
                                             f"Please suggest a basic itinerary including transport options, accommodation, meal plans, and estimated cost breakdown."}
             ]
         )
@@ -83,16 +88,19 @@ def generate_travel_itinerary(destLat: str, desLong:str, user_preferences: dict,
         raise Exception(f"Error generating travel itinerary: {str(e)}")
 
 # Define user preferences
-destination = "Saint Martin"
 user_preferences = {
+    "destination" : "Saint Martin",
+    "current_latitude" : 23.7271143,
+    "current_longitude" : 90.3860279,
     "budget": "3",
     "duration": "5 days",
     "transport_type": "flight",
-    "meal_preference": "vegetarian"
+    "meal_preference": "vegetarian",
+    "destination_latitude": 23.7271143,
+    "destination_longitude": 90.3860279,
 }
 
-current_latitude = 23.7271143
-current_longitude = 90.3860279
+
 
 # itinerary = generate_travel_itinerary(destination, user_preferences, current_latitude, current_longitude)
 # print(itinerary)
