@@ -2,7 +2,7 @@ import os
 from typing import Dict, List, Tuple
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from openai_service import generate_travel_itinerary, analyze_image, generate_blog, analyze_trip_mood_gpt  # Import the functions
+from openai_service import generate_travel_itinerary, analyze_image, generate_blog, generate_mood_analysis  # Import the functions
 from datetime import date
 from image import find_similar_images, image_data  
 from recommendation import get_nearby_places
