@@ -3,7 +3,7 @@ from openai import OpenAI
 from dotenv import load_dotenv
 import os
 from weather_data import get_weather_data
-from recommendation import get_nearby_hotels
+from recommendation import get_nearby_places
 
 
 load_dotenv()
@@ -38,29 +38,18 @@ def analyze_image(image_url: str):
         raise Exception(f"Error analyzing image: {str(e)}")
 
 
-def generate_travel_itinerary(destination: str, user_preferences: dict, lat: float, long: float):
+def generate_travel_itinerary(destLat: str, desLong:str, user_preferences: dict, lat: float, long: float):
     try:
         # Extract user preferences from the input dictionary
-        budget = user_preferences.get("budget", "mid-range")
+        budget = user_preferences.get("budget", "2")
         duration = user_preferences.get("duration", "7 days")
         transport_type = user_preferences.get("transport_type", "flight")
         meal_preference = user_preferences.get("meal_preference", "local cuisine")
 
-        # Define your Google API key here
         api_key = os.getenv("GOOGLE_API_KEY")
 
-        # Example coordinates for destination
-        location_coordinates = {
-            "Saint Martin": (20.6325, 92.3172),
-        }
 
-        # Get destination coordinates
-        dest_lat, dest_long = location_coordinates.get(destination, (None, None))
-        if dest_lat is None or dest_long is None:
-            raise Exception(f"Coordinates not found for destination: {destination}")
-
-        # Fetch nearby hotels
-        nearby_hotels = get_nearby_hotels(dest_lat, dest_long, api_key)
+        nearby_hotels = get_nearby_places(destLat, desLong, api_key)
 
         # Create a summary of nearby hotels for the prompt
         hotels_summary = ""
@@ -75,7 +64,7 @@ def generate_travel_itinerary(destination: str, user_preferences: dict, lat: flo
         completion = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": "You are a travel assistant that creates personalized travel itineraries based on user preferences. Show the result in json format."},
+                {"role": "system", "content": "You are a travel assistant that creates personalized travel itineraries based on user preferences. Show the result in json format. Budget={1,2,3}={budget, mid-range, luxury}"},
                 {"role": "user", "content": f"I want to travel to {destination}. My preferences are: \n"
                                             f"Budget: {budget}\n"
                                             f"Duration: {duration}\n"
@@ -96,9 +85,8 @@ def generate_travel_itinerary(destination: str, user_preferences: dict, lat: flo
 # Define user preferences
 destination = "Saint Martin"
 user_preferences = {
-    "budget": "luxury",
+    "budget": "3",
     "duration": "5 days",
-    "travel_type": "leisure",
     "transport_type": "flight",
     "meal_preference": "vegetarian"
 }

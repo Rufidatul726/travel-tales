@@ -35,6 +35,9 @@ async def analyze_image_endpoint(image_input: ImageInput):
         raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
 
 
+
+
+
 class SearchQuery(BaseModel):
     query: str
 
@@ -42,17 +45,16 @@ class ImageResponse(BaseModel):
     url: str
     score: float
 
+
 # Endpoint to search for similar images
 @app.post("/search-similar-images/", response_model=List[ImageResponse])
 async def search_similar_images(search_query: SearchQuery) -> List[ImageResponse]:
     try:
-        similar_images = find_similar_images(search_query.query)
-        # Create a list of ImageResponse instances
+        similar_images: List[Tuple[str, float]] = find_similar_images(search_query.query)
         formatted_images = [ImageResponse(url=img_url, score=score) for img_url, score in similar_images]
         return formatted_images
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
-
 
 
 @app.post("/generate-blog/")
