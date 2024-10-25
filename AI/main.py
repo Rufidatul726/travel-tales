@@ -72,20 +72,18 @@ async def generate_blog_endpoint(user_input: UserBlog):
         raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
 
 
-class UserPreferences(BaseModel):
-    destination: str
-    budget: str
-    duration: str
-    curLat: str
-    curLong: str
-    descLat: str
-    descLong: str
-    travel_type: str
-    transport_type: str
-    meal_preference: str
 
 class TravelRequest(BaseModel):
-    user_preferences: UserPreferences
+    destination: str
+    current_latitude: float
+    current_longitude: float
+    budget: str
+    startDate: str
+    endDate: str
+    transport_type: str
+    meal_preference: str
+    destination_latitude: float
+    destination_longitude: float
 
 @app.post("/generate-plan/")
 async def generate_plan_endpoint(travel_request: TravelRequest):
