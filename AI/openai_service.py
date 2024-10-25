@@ -89,7 +89,7 @@ def generate_travel_itinerary(user_preferences: dict):
 
 # Define user preferences
 user_preferences = {
-    "destination" : "Saint Martin",
+    "destination" : "Saint Martin Island, bangladesh",
     "current_latitude" : 23.7271143,
     "current_longitude" : 90.3860279,
     "budget": "3",
