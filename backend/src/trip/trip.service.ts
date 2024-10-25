@@ -16,10 +16,15 @@ export class TripService {
           latitude: createTripDto.location[0],
           longitude: createTripDto.location[1],
         },
+        current_location: {
+          latitude: createTripDto.location[0],
+          longitude: createTripDto.location[1],
+        },
         budget: createTripDto.budget,
         days: createTripDto.days,
         start_date: createTripDto.startDate,
         endDate: createTripDto.endDate,
+        is_trip_ended: false
       },
     })
 

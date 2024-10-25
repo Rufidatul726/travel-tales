@@ -1,10 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { lastValueFrom } from 'rxjs';
+import { HttpService } from '@nestjs/axios';
 
 @Injectable()
 export class ImageAlbumService {
-  constructor(private prisma: PrismaService) {
+  constructor(private prisma: PrismaService, private httpService: HttpService) {
 
   }
 
@@ -55,13 +57,15 @@ export class ImageAlbumService {
     const description = "Need to work on that"
     // Save file information in the database
     // console.log(file);
+    // const presignedUrl = await this.minioService.uploadImage(file);
+    // console.log(presignedUrl);
 
     return await this.prisma.images.create({
       data: {
         file_name: file.filename,
         trip_id: tripId,
         album_id: albumId,
-        description: 'Image description here',
+        description: "",
       },
     });
   }

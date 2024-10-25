@@ -20,6 +20,8 @@ export class UsersController {
   @UseGuards(AccessTokenGuard)
   @Get('me')
   findOne(@Req() req) {
+    // console.log(req.user);
+
     return this.usersService.findOneById(req.user['sub']);
   }
 

@@ -10,6 +10,13 @@ export class CreateTripDto {
     location: [number, number];
 
     @ApiProperty({
+        description: 'Location as an array of [latitude, longitude]',
+        example: [23.8103, 90.4125],
+    })
+    @IsArray()
+    current_location: [number, number];
+
+    @ApiProperty({
         description: 'Name of the place',
         example: "Saint Martin"
     })
