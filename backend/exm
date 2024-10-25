@@ -1,0 +1,5 @@
+JWT_SECRET_KEY = 'AccessToken Secret Key'
+JWT_REFRESH_TOKEN = 'This should be random token'
+
+
+DATABASE_URL="mongodb+srv://mirajmonayem:hMQfnFyz21V4boy0@cluster0.ewrpv.mongodb.net/TravelTales"
