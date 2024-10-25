@@ -42,7 +42,8 @@ def generate_travel_itinerary(user_preferences: dict):
     try:
         # Extract user preferences from the input dictionary
         budget = user_preferences.get("budget", "2")
-        duration = user_preferences.get("duration", "7 days")
+        startDate = user_preferences.get("startDate", "")
+        endDate = user_preferences.get("endDate", "")
         transport_type = user_preferences.get("transport_type", "bus")
         meal_preference = user_preferences.get("meal_preference", "local cuisine")
         current_latitude = user_preferences.get("current_latitude", "")
@@ -70,9 +71,8 @@ def generate_travel_itinerary(user_preferences: dict):
             model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": "You are a travel assistant that creates personalized travel itineraries based on user preferences. Budget={1,2,3}={budget, mid-range, luxury}"},
-                {"role": "user", "content": f"I want to travel to {destination} with cordinate {destination_latitude}, {destination_longitude}. My preferences are: \n"
+                {"role": "user", "content": f"I want to travel to {destination} with cordinate {destination_latitude}, {destination_longitude} from {startDate} to {endDate}. My preferences are: \n"
                                             f"Budget: {budget}\n"
-                                            f"Duration: {duration}\n"
                                             f"Preferred Transport: {transport_type}\n"
                                             f"Meal Preference: {meal_preference}\n"
                                             f"{hotels_summary}\n"
@@ -93,7 +93,8 @@ user_preferences = {
     "current_latitude" : 23.7271143,
     "current_longitude" : 90.3860279,
     "budget": "3",
-    "duration": "5 days",
+    "startDate": "2024-10-10",
+    "endDate": "2024-10-15",
     "transport_type": "flight",
     "meal_preference": "vegetarian",
     "destination_latitude": 23.7271143,
