@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import Destination from './Destination'
 import MapImplementation from './MapImplementation'
 import LeftHero from './LeftHero'
+import OpenStreetMap from './OpenStreetMap'
 
 const Hero = () => {
   const [center, setCenter] = useState<[number, number] | null>(null); 
@@ -31,6 +32,7 @@ const Hero = () => {
           <LeftHero/>
         <div className="relative lg:h-[75vh] h-screen top-[-3rem] z-[-1] lg:w-1/2 w-screen">
           <MapImplementation  center={center} setCenter={setCenter}/>
+          
         </div>
       </div>
     </div>

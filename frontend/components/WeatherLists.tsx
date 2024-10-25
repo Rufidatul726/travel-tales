@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import WeatherModal from './WeatherModal';
 import { WeatherData } from '@/types/user';
 
-const WeatherLists = () => {
+const WeatherLists = ({lat, lon, startDate, endDate}: {lat: number, lon: number, startDate: string, endDate:string}) => {
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
   const [allWeatherData,setAllWeatherData] = useState<WeatherData[]>([])
     const [data, setData] = useState(null)

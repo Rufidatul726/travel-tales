@@ -12,66 +12,69 @@ import { Feature } from 'ol';
 import { Point } from 'ol/geom';
 import { Icon, Style } from 'ol/style';
 import { useGeographic } from 'ol/proj';
+import { defaults as defaultControls } from 'ol/control';
+import { defaults as defaultInteractions } from 'ol/interaction';
 
-const MapImplementation = ({center, setCenter}: {center: [number, number] | null, setCenter: React.Dispatch<React.SetStateAction<[number, number] | null>>}) => {
+const OpenStreetMap = ({center, setCenter}: {center: [number, number] | null, setCenter: React.Dispatch<React.SetStateAction<[number, number] | null>>}) => {
     const [map1Object, setMap1Object] = useState<Map | null>(null);
     const map1Container = useRef<HTMLDivElement | null>(null); 
 
-
-    useGeographic()
+    useGeographic();
 
     useEffect(() => {
-        if(center){
+        if (center) {
             const map1 = new Map({
                 layers: [
                     new TileLayer({
                         source: new OSM(),
                     }),
                 ],
-                view: new View({ 
+                view: new View({
                     center: center,
                     zoom: 12
                 }),
             });
 
             if (center && center.length === 2) {
-                // Create a marker for the current location
                 const marker = new Feature({
-                    geometry: new Point(center), // Set the point at the center
+                    geometry: new Point(center),
                 });
 
-                // Define the marker style (e.g., an icon)
                 marker.setStyle(
                     new Style({
                         image: new Icon({
-                            src: '/map-pin.png', // Path to marker icon
-                            anchor: [0.5, 1], // Positioning the anchor at the bottom of the image
-                            scale: 0.05 // Adjust the scale of the icon if necessary
+                            src: '/map-pin.png', 
+                            anchor: [0.5, 1],
+                            scale: 0.05
                         })
                     })
                 );
 
-                // Create a vector source to hold the marker
                 const vectorSource = new VectorSource({
                     features: [marker],
                 });
 
-                // Create a vector layer to display the marker
                 const markerLayer = new VectorLayer({
                     source: vectorSource,
                 });
 
-                // Add the marker layer to the map
                 map1.addLayer(markerLayer);
             }
-    
-            
+
             if (map1Container.current) {
                 map1.setTarget(map1Container.current);
             }
+
+            console.log(map1.getControls())
+
+            // Add click interaction to update center coordinates
+            map1.on('click', function(event) {
+                const clickedCoordinate = map1.getEventCoordinate(event.originalEvent);
+                setCenter([clickedCoordinate[0], clickedCoordinate[1]]);
+            });
+
             setMap1Object(map1);
             
-            // Cleanup on component unmount
             return () => {
                 map1.setTarget(undefined);
                 setMap1Object(null);
@@ -84,4 +87,4 @@ const MapImplementation = ({center, setCenter}: {center: [number, number] | null
     );
 }
 
-export default MapImplementation;
+export default OpenStreetMap;

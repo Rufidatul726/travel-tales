@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { NAV_LINKS } from '@/constants'
 import Button from './Button'
@@ -9,6 +9,16 @@ import { useRouter } from 'next/navigation'
 
 const Navbar = () => {
   const router = useRouter();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+      router.push('/auth');
+    } else {
+      setIsAuthenticated(true);
+    }
+  }, [router]);
 
   const handleScroll = (id: string) => {
     const element = document.getElementById(id);
@@ -18,7 +28,11 @@ const Navbar = () => {
   };
 
   const handleLogin = () => {
-    router.push('/auth');
+    if(!isAuthenticated){
+      router.push('/auth');
+    }else{
+      router.push('/profile')
+    }
   }
 
   return (
@@ -36,13 +50,25 @@ const Navbar = () => {
       </ul>
 
       <div className="lg:flexCenter hidden">
-        <Button 
-          type="button"
-          title="Login"
-          icon="/user.svg"
-          variant="btn_dark_green"
-          onClick={handleLogin}
-        />
+        {isAuthenticated && (
+          <Button 
+            type="button"
+            icon="/user.svg"
+            variant="btn_dark_green"
+            onClick={handleLogin}
+          />
+        )}
+        {!isAuthenticated && (
+          <Button 
+            type="button"
+            title="Login"
+            icon="/user.svg"
+            variant="btn_dark_green"
+            onClick={handleLogin}
+          />
+        )
+        }
+        
       </div>
 
       <Image 

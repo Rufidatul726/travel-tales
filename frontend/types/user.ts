@@ -26,5 +26,6 @@ export type WeatherData = {
     sunrise: string | null;
     sunset: string | null;
     weatherProb: string;
+    time: string;
   };
   
