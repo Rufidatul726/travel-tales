@@ -132,3 +132,23 @@ def generate_blog(user_input: str, latitude: float, longitude: float, start_date
 
     except Exception as e:
         raise Exception(f"Error generating blog: {str(e)}")
+
+
+def analyze_trip_mood_gpt(blog_content: str):
+    try:
+        # Send the blog content to the GPT model with a prompt asking for mood analysis
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are an expert travel assistant. Analyze the mood of the following travel blog based on the emotions expressed."},
+                {"role": "user", "content": f"Analyze the mood of this travel blog: {blog_content}"}
+            ]
+        )
+
+        # Extract the response from GPT
+        mood_analysis = response['choices'][0]['message']['content']
+        return mood_analysis
+    
+    except Exception as e:
+        return f"Error analyzing trip mood: {str(e)}"
+
