@@ -88,8 +88,8 @@ class TravelRequest(BaseModel):
 @app.post("/generate-plan/")
 async def generate_plan_endpoint(travel_request: TravelRequest):
     try:
-        result = generate_travel_itinerary(  # Await if the function is async
-            travel_request.user_preferences.dict()
+        result = generate_travel_itinerary(
+            travel_request.dict()
         )
         return {"gpt_response": result}
     except Exception as e:

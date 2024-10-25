@@ -48,16 +48,15 @@ def generate_travel_itinerary(user_preferences: dict):
         meal_preference = user_preferences.get("meal_preference", "local cuisine")
         current_latitude = user_preferences.get("current_latitude", "")
         current_longitude = user_preferences.get("current_longitude", "")
-        destination = user_preferences.get("desctination", "")
+        destination = user_preferences.get("destination", "")
         destination_latitude = user_preferences.get("destination_latitude", "")
         destination_longitude = user_preferences.get("destination_longitude", "")
 
         api_key = os.getenv("GOOGLE_API_KEY")
+        type="hotel"
 
+        nearby_hotels = get_nearby_places(destination_latitude, destination_longitude, type, api_key)
 
-        nearby_hotels = get_nearby_places(destination_latitude, destination_longitude, api_key)
-
-        # Create a summary of nearby hotels for the prompt
         hotels_summary = ""
         if nearby_hotels:
             hotels_summary = "Here are some nearby hotels:\n"
@@ -66,12 +65,11 @@ def generate_travel_itinerary(user_preferences: dict):
         else:
             hotels_summary = "No nearby hotels found."
 
-        # Call OpenAI API for generating a travel itinerary
         completion = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": "You are a travel assistant that creates personalized travel itineraries based on user preferences. Budget={1,2,3}={budget, mid-range, luxury}"},
-                {"role": "user", "content": f"I want to travel to {destination} with cordinate {destination_latitude}, {destination_longitude} from {startDate} to {endDate}. My preferences are: \n"
+                {"role": "system", "content": f"You are a travel assistant that creates personalized travel itineraries based on user preferences. Budget=1: budget, 2: mid-range, 3: luxury."},
+                {"role": "user", "content": f"I want to travel to {destination} from {startDate} to {endDate}. My preferences are: \n"
                                             f"Budget: {budget}\n"
                                             f"Preferred Transport: {transport_type}\n"
                                             f"Meal Preference: {meal_preference}\n"
@@ -81,12 +79,10 @@ def generate_travel_itinerary(user_preferences: dict):
             ]
         )
 
-        # Return the assistant's response
         return completion.choices[0].message.content
 
     except Exception as e:
         raise Exception(f"Error generating travel itinerary: {str(e)}")
-
 # Define user preferences
 user_preferences = {
     "destination" : "Saint Martin Island, bangladesh",
