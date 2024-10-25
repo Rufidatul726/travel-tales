@@ -13,7 +13,7 @@ const Destination = (
   const [input, setInput] = useState('');
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate]= useState('')
-  const [budget, setBudget]=useState('')
+  const [budget, setBudget]=useState(0)
   const [results, setResults] = useState<Result[]>([]);
   const [error, setError] = useState<string | null>(null);
 
@@ -33,12 +33,6 @@ const Destination = (
       console.error(err);
     }
   };
-
-  const handleSearch  = () => {
-      console.log(center, startDate, endDate)
-
-      
-  }
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -113,8 +107,13 @@ const Destination = (
           <select
             id="budget"
             className="w-full bg-transparent p-0 text-gray-900 focus:ring-0 focus:border-0 border-none sm:text-sm"
-            onChange={(e) => setBudget(e.target.value)}
-            value={budget}
+            onChange={(e) => {
+              const value = e.target.value;
+              if (value === "low") setBudget(1);
+              else if (value === "medium") setBudget(2);
+              else if (value === "luxury") setBudget(3);
+            }}
+            value={budget === 1 ? "low" : budget === 2 ? "medium" : budget === 3 ? "luxury" : ""}
           >
             <option value="" disabled>Select your budget</option>
             <option value="low" className="text-gray-900">Low</option>
@@ -131,7 +130,7 @@ const Destination = (
             value={budget}
           /> */}
         </div>
-        <Link href={`/searchDetails/${center}/${startDate}/${endDate}`} className="cursor-pointer mt-3 sm:mt-0 w-full sm:w-auto px-4 py-3 bg-gray-500 hover:bg-black text-white font-semibold rounded-full flex items-center justify-center">
+        <Link href={`/searchDetails/${input}/${center}/${startDate}/${endDate}/${budget}`} className="cursor-pointer mt-3 sm:mt-0 w-full sm:w-auto px-4 py-3 bg-gray-500 hover:bg-black text-white font-semibold rounded-full flex items-center justify-center">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
               <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
             </svg>
